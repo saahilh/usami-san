@@ -1,22 +1,21 @@
 const eventEmbedBase = {
   color: 0,
   title: ':game_die: BOARD GAME NIGHT :game_die: ',
-  url: 'https://store.steampowered.com/app/286160/Tabletop_Simulator/',
   author: {
     name: 'Get Tabletop Simulator here',
-    icon_url: 'https://pbs.twimg.com/profile_images/1368668417549557761/cwmgoiJ2.png ',
+    icon_url: 'https://pbs.twimg.com/profile_images/1368668417549557761/cwmgoiJ2.png',
+    url: 'https://store.steampowered.com/app/286160/Tabletop_Simulator/',
   },
   description: `
-    Weekly board game night. React to let us know if you'll be there this weekend.
-    It gives us something more to look forward to this weekend!
-    \n\n:green_square: Coming\n\n:blue_square: Probably coming\n\n:orange_square: Probably busy\n\n:red_square: Busy
+    Weekly board game night. React to let us know if you'll be there this weekend. It gives us something more to look forward to this weekend!
+    \n:green_square: Coming\n\n:blue_square: Probably coming\n\n:orange_square: Probably busy\n\n:red_square: Busy
   `,
   thumbnail: { url: 'https://i.imgur.com/chqFIZn.png' },
   image: { url: 'https://animananimedotcom.files.wordpress.com/2017/04/mpv-shot00014.jpg?w=636' },
   footer: { text: 'Location: MSAC Gaming VC on Tabletop Simulator' },
 };
 
-const createEventEmbedForDate = (eventDate) => ({ ...eventEmbedBase, timestamp: eventDate });
+const createEventEmbedForDate = (eventDate) => ({ ...eventEmbedBase, timestamp: eventDate.getTime() });
 
 const hiatusEmbed = {
   fields: [{

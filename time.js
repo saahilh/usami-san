@@ -15,6 +15,10 @@ class Time {
     return this.date;
   }
 
+  getDateAsString(timezone = 'America/Toronto') {
+    return this.date.toLocaleString('en-US', { timeZone: timezone });
+  }
+
   advanceDay() {
     this.date.setDate(this.date.getDate() + 1);
   }
