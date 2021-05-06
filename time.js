@@ -46,10 +46,14 @@ class Time {
     return this.date;
   }
 
-  queueCallbackForDate(callback, dayString, timeString = '00:00', repeatWeekly) {
-    const originalTime = new Time(this.date);
+  getCurrentTime() {
+    return new Date(currentTime.toLocaleString('en-US', { timeZone: timezone }));
+  }
+
+  static queueCallbackForDate(callback, dayString, timeString = '00:00', repeatWeekly) {
+    const originalTime = getCurrentTime();
     
-    const targetTime = new Time();
+    const targetTime = getCurrentTime();
     targetTime.advanceToDate(dayString, timeString);
 
     const timeToNextCallback = targetTime - originalTime;
