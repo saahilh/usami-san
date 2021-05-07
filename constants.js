@@ -17,7 +17,7 @@ const eventEmbedBase = {
 
 const createEventEmbedForDate = (eventDate) => ({ ...eventEmbedBase, timestamp: eventDate.getTime() });
 
-const hiatusEmbed = {
+const HIATUS_EMBED = {
   fields: [{
     name: ':sleeping: Going on hiatus',
     value: 'React to receive the hiatus role and stop receiving notifications. You\'ll also be marked with this role if you haven\'t attended for four consecutive weeks since joining or since your last event. If circumstances change and you want to start coming regularly, you can always change your reaction here!',
@@ -32,5 +32,5 @@ const hiatusEmbed = {
 
 module.exports = {
   createEventEmbedForDate,
-  hiatusEmbed,
+  HIATUS_EMBED,
 };
