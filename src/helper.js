@@ -1,3 +1,16 @@
+const asyncMutativeMap = async (itemList, asyncCallback) => {
+  const promiseList = [];
+
+  for (const item of itemList) {
+    const promise = asyncCallback(item);
+    promiseList.push(promise);
+  }
+  
+  return Promise.all(promiseList);
+};
+
+const createEventEmbedForDate = (eventDate) => ({ ...eventEmbedBase, timestamp: eventDate.getTime() });
+
 const eventEmbedBase = {
   color: 0,
   title: ':game_die: BOARD GAME NIGHT :game_die: ',
@@ -15,7 +28,16 @@ const eventEmbedBase = {
   footer: { text: 'Location: MSAC Gaming VC on Tabletop Simulator' },
 };
 
-const createEventEmbedForDate = (eventDate) => ({ ...eventEmbedBase, timestamp: eventDate.getTime() });
+const logError = (message, e) => {
+  const date = new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' });
+  return console.log(`${date}: ${message}`, { e });
+};
+
+
+const logMessage = (message) => {
+  const date = new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' });
+  return console.log(`${date}: ${message}`);
+};
 
 const HIATUS_EMBED = {
   fields: [{
@@ -31,6 +53,9 @@ const HIATUS_EMBED = {
 };
 
 module.exports = {
+  asyncMutativeMap,
   createEventEmbedForDate,
+  logError,
+  logMessage,
   HIATUS_EMBED,
 };
