@@ -1,13 +1,13 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const Time = require('./src/Time');
-const { createEventEmbedForDate, logMessage } = require('./src/helper');
+const { createEventEmbedForDate, logError, logMessage } = require('./src/helper');
 const { addRoleReactionsToMessage } = require('./src/reactions');
 // TODO: add unit tests
 
 const client = new Client();
 
-const postEvent = (client) => {
+const postEvent = async (client) => {
   const eventDate = new Time('saturday', '20:30');
   const eventEmbed = createEventEmbedForDate(eventDate);
 

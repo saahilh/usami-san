@@ -36,15 +36,20 @@ async function handleReactionAdd(newReaction, user) {
   const message = newReaction.message;
   const member = message.guild.members.cache.get(user.id) || await message.guild.members.fetch(user.id);
   
-  member.roles.add(EMOTE_TO_ROLE_ID[newReaction.emoji.name]);
-  member.roles.remove(process.env.INTERESTED_ROLE_ID);
-  
-  for (let postedReaction of message.reactions.cache.values()) {
-    if (postedReaction.emoji.name === newReaction.emoji.name || !postedReaction.users.cache.has(user.id)) continue;
+  const currentEmoteRoleId = EMOTE_TO_ROLE_ID[newReaction.emoji.name];
+  member.roles.add(currentEmoteRoleId);
 
-    postedReaction.users.remove(user.id);
-    member.roles.remove(EMOTE_TO_ROLE_ID[postedReaction.emoji.name]);
-  }
+  const EMOTE_LIST_WITHOUT_CURRENT = EMOTE_LIST.filter((EMOTE) => EMOTE !== newReaction.emoji.name)
+  
+  const EMOTE_ROLE_ID_LIST_WITHOUT_CURRENT = EMOTE_LIST_WITHOUT_CURRENT.map((EMOTE) => EMOTE_TO_ROLE_ID[EMOTE]);
+  const emoteRoleIdToRemoveList = [process.env.INTERESTED_ROLE_ID, ...EMOTE_ROLE_ID_LIST_WITHOUT_CURRENT]
+  
+  const postedReactionList= [...message.reactions.cache.values()];
+
+  const clearRoles = asyncMutativeMap(emoteRoleIdToRemoveList, (emoteRoleIdToRemove) => member.roles.cache.has(emoteRoleIdToRemove) && member.roles.remove(emoteRoleIdToRemove));
+  const clearEmojis = asyncMutativeMap(postedReactionList, (postedReaction) => postedReaction.emoji.name !== newReaction.emoji.name && postedReaction.users.remove(user.id));
+
+  await [clearRoles, clearEmojis];
 
   logMessage(`Collected ${newReaction.emoji.name} from ${user.tag}`);
 }
@@ -63,7 +68,7 @@ async function handleEventEnd(message) {
 
   const removedMemberIds = [];
   const removeEventRoles = () => {
-    const removeRoleList = roleIdList.map((roleId) => allRolesList.get(roleId));
+    const removeRoleList = EMOTE_ROLE_ID_LIST.map((EMOTE_ROLE_ID) => allRolesList.get(EMOTE_ROLE_ID));
     
     const removeAllMembersFromRole = (role) => {
       const memberIdList = [...role.members.keys()];
@@ -79,7 +84,7 @@ async function handleEventEnd(message) {
     return asyncMutativeMap(removedMemberIds, () => interestedRole.members.add(memberId));
   }
 
-  return () => {
+  return async () => {
     await [removeEventRoles(), setRemovedMembersInterested()];
     logMessage(`Event ended & member roles cleared.`);
   };
