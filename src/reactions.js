@@ -59,28 +59,28 @@ const handleReactionRemove = async (removedReaction, user) => {
 };
 
 async function handleEventEnd(message) {
-  const memberList = await message.guild.members.fetch();
-  
-  const getActiveMemberList = async (memberList) => {
-    const memberIsActive = (member) => !(member.user.bot || member.roles.cache.has(process.env.HIATUS_ROLE_ID));
-    const nullifyInactiveMembersPromises = asyncMutativeMap(memberList.values(), async (member) => memberIsActive(member) && member);
+  const allRolesList = await message.guild.roles.fetch();
+
+  const removedMemberIds = [];
+  const removeEventRoles = () => {
+    const removeRoleList = roleIdList.map((roleId) => allRolesList.get(roleId));
     
-    const removeInactiveMembers = (activeMemberList, member) => (member ? [...activeMemberList, member] : activeMemberList);
-    return nullifyInactiveMembersPromises.then((members) => members.reduce(removeInactiveMembers, []));
-  };
+    const removeAllMembersFromRole = (role) => {
+      const memberIdList = [...role.members.keys()];
+      removedMemberIds.push(...memberIdList);
+      return asyncMutativeMap(memberList, (member) => role.members.remove(member));
+    }
 
-  const activeMemberList = await getActiveMemberList(memberList);
-
-  const removeRoleForAllMembers = async (role) => {
-    const removeRole = async (member) => member.roles.remove(role);
-    return asyncMutativeMap(activeMemberList, removeRole);
-  };
-
-  const markMemberInterested = async (member) => !member.roles.cache.has(process.env.INTERESTED_ROLE_ID) && member.roles.add(process.env.INTERESTED_ROLE_ID);
+    return asyncMutativeMap(removeRoleList, removeAllMembersFromRole);
+  }
+  
+  const setRemovedMembersInterested = () => {
+    const interestedRole = allRolesList.get(process.env.INTERESTED_ROLE_ID);
+    return asyncMutativeMap(removedMemberIds, () => interestedRole.members.add(memberId));
+  }
 
   return () => {
-    await asyncMutativeMap(EMOTE_ROLE_ID_LIST, removeRoleForAllMembers);
-    await asyncMutativeMap(activeMemberList, markMemberInterested);
+    await [removeEventRoles(), setRemovedMembersInterested()];
     logMessage(`Event ended & member roles cleared.`);
   };
 }
