@@ -1,15 +1,6 @@
 const Time = require('./Time');
 const { asyncMutativeMap, logError, logMessage } = require('./helper');
-
-const EMOTE_TO_ROLE_ID = {
-  '🟩': process.env.COMING_ROLE_ID,
-  '🟦': process.env.PROBABLY_COMING_ROLE_ID,
-  '🟧': process.env.PROBABLY_BUSY_ROLE_ID,
-  '🟥': process.env.BUSY_ROLE_ID,
-};
-
-const EMOTE_LIST = Object.keys(EMOTE_TO_ROLE_ID);
-const EMOTE_ROLE_ID_LIST = Object.values(EMOTE_TO_ROLE_ID);
+const { EMOTE_LIST, EMOTE_ROLE_ID_LIST, ROLE_RESET_TIME } = require('./eventConstants');
 
 async function addRoleReactionsToMessage(message) {
   try {
@@ -18,7 +9,7 @@ async function addRoleReactionsToMessage(message) {
     const filter = (reaction) => (EMOTE_LIST.indexOf(reaction.emoji.name) !== -1);
     const config = {
       dispose: true,
-      time: Time.getTimeToDate('sunday', '01:00'),
+      time: Time.getTimeToDate(...ROLE_RESET_TIME),
     };
     const collector = await message.createReactionCollector(filter, config);
 

@@ -1,15 +1,15 @@
 require('dotenv').config();
 const { Client } = require('discord.js');
 const Time = require('./src/Time');
-const { createEventEmbedForDate, logError, logMessage } = require('./src/helper');
+const { createEventEmbed, HIATUS_EMBED, EVENT_POST_TIME, EVENT_SOON_NOTIFICATION_TIME } = require('./src/eventConstants');
+const { logError, logMessage } = require('./src/helper');
 const { addRoleReactionsToMessage } = require('./src/reactions');
 // TODO: add unit tests
 
 const client = new Client();
 
-const postEvent = async (client) => {
-  const eventDate = new Time('saturday', '20:30');
-  const eventEmbed = createEventEmbedForDate(eventDate);
+const postEvent = async () => {
+  const eventEmbed = createEventEmbed();
 
   try {
     await client.login(process.env.DISCORD_BOT_TOKEN);
@@ -24,18 +24,12 @@ const postEvent = async (client) => {
   }
 };
 
+Time.queueWeeklyCallbackForDate(postEvent, ...EVENT_POST_TIME);
 
+// TODO: add in a mid-week notification?
 
-// TODO: delete line (used for testing)
-postEvent(client);
+// TODO: implement this message. It should @ both 'coming' and 'probably coming'
+// Time.queueWeeklyCallbackForDate(eventSoonNotification, EVENT_SOON_NOTIFICATION_TIME);
 
-// TODO: uncomment
-// Time.queueWeeklyCallbackForDate(() => postEvent(client), 'monday', '19:00', true);
-
-// TODO: implement
-// Time.queueWeeklyCallbackForDate(sendEventNotification, 'wednesday', '19:00', true);
-
-// TODO: implement
-// Time.queueWeeklyCallbackForDate(eventSoonNotification, 'saturday', '20:00', true);
-
+// TODO: have log write to a file
 // TODO: implement functionality to mark users as inactive if they haven't attended for 4 weeks
