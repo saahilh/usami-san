@@ -1,11 +1,8 @@
 const Time = require('./Time');
 
 const EVENT_POST_TIME = ['monday', '19:00'];
-const EVENT_SOON_NOTIFICATION_TIME = ['saturday', '20:00'];
 const EVENT_TIME = ['saturday', '20:30'];
 const ROLE_RESET_TIME = ['sunday', '01:00'];
-
-const createEventEmbed = () => ({ ...EVENT_EMBED_BASE, timestamp:  new Time(...EVENT_TIME) });
 
 const EMOTE_TO_ROLE_ID = {
   '🟩': process.env.COMING_ROLE_ID,
@@ -17,8 +14,13 @@ const EMOTE_TO_ROLE_ID = {
 const EMOTE_LIST = Object.keys(EMOTE_TO_ROLE_ID);
 const EMOTE_ROLE_ID_LIST = Object.values(EMOTE_TO_ROLE_ID);
 
-const EVENT_NOTIFICATION = 'Event starts in 30 minutes. See you soon!';
+const EVENT_SOON_NOTIFICATION = {
+  TIME: ['saturday', '20:00'],
+  ROLES: [process.env.COMING_ROLE_ID, process.env.PROBABLY_COMING_ROLE_ID],
+  MESSAGE: 'Board game night in 30 minutes. See you soon!',
+};
 
+const createEventEmbed = () => ({ ...EVENT_EMBED_BASE, timestamp:  new Time(...EVENT_TIME) });
 const EVENT_EMBED_BASE = {
   color: 0,
   title: ':game_die: BOARD GAME NIGHT :game_die: ',
@@ -56,10 +58,8 @@ module.exports = {
   EMOTE_ROLE_ID_LIST,
   EMOTE_TO_ROLE_ID,
   EVENT_EMBED_BASE,
-  EVENT_NOTIFICATION,
   EVENT_POST_TIME,
-  EVENT_RESET_TIME,
-  EVENT_SOON_NOTIFICATION_TIME,
+  EVENT_SOON_NOTIFICATION,
   EVENT_TIME,
   ROLE_RESET_TIME,
 };

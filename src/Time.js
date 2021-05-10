@@ -30,14 +30,14 @@ class Time {
     return this.date;
   }
 
-  static getTimeToDate(dayString, timeString='00:00') {
+  static getTimeToDate([dayString, timeString='00:00']) {
     const currentTime = new Date();
     const targetTime = new Time(dayString, timeString);
     return targetTime - currentTime;
   }
 
-  static queueWeeklyCallbackForDate(callback, dayString, timeString='00:00') {
-    const timeToNextCallback = Time.getTimeToDate(dayString, timeString);
+  static queueWeeklyCallbackForDate(callback, [dayString, timeString='00:00']) {
+    const timeToNextCallback = Time.getTimeToDate([dayString, timeString]);
     const ONE_WEEK_MS = 86400000;
 
     setTimeout(() => {
