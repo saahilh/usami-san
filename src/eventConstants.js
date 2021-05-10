@@ -1,6 +1,6 @@
 const Time = require('./Time');
 
-const EVENT_POST_TIME = ['monday', '19:00'];
+const EVENT_POST_TIME = ['wednesday', '19:00'];
 const EVENT_TIME = ['saturday', '20:30'];
 const ROLE_RESET_TIME = ['sunday', '01:00'];
 

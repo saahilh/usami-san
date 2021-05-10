@@ -1,4 +1,5 @@
 require('dotenv').config();
+const updateDotenv = require('update-dotenv');
 const { createEventEmbed, EVENT_TIME, EVENT_SOON_NOTIFICATION, EMOTE_TO_ROLE_ID, ROLE_RESET_TIME} = require('./eventConstants');
 const { logError, logMessage } = require('./helper');
 const ReactionRoleManager = require('./ReactionRoleManager');
@@ -10,6 +11,8 @@ class ClientInterface {
   } 
   
   async postEvent () {
+    if (process.env.EVENT_POST_ID) return;
+    
     const eventEmbed = createEventEmbed();
   
     try {
@@ -17,8 +20,9 @@ class ClientInterface {
   
       const eventChannel = this.client.channels.cache.get(process.env.CHANNEL_ID) || await this.client.channels.fetch(process.env.CHANNEL_ID);
       const postedEmbed = await eventChannel.send({ embed: eventEmbed });
+      updateDotenv({ EVENT_POST_ID: postedEmbed.id });
+
       const reactionRoles = new ReactionRoleManager(EMOTE_TO_ROLE_ID);
-  
       await reactionRoles.addReactionRolesToMessage(postedEmbed, EVENT_TIME);
     
       const eventDate = new Time(...ROLE_RESET_TIME);

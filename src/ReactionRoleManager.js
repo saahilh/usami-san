@@ -1,3 +1,4 @@
+const updateDotenv = require('update-dotenv');
 const Time = require('./Time');
 const { asyncMutativeMap, logError, logMessage } = require('./helper');
 
@@ -61,6 +62,7 @@ class ReactionRoleManager {
   };
 
   async makeHandleEventEnd(message) {
+    updateDotenv({ EVENT_POST_ID: '' });
     const allRolesList = await message.guild.roles.fetch();
 
     const removedMemberIds = [];
