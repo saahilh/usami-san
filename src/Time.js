@@ -1,6 +1,8 @@
 class Time {
   constructor(dayString, timeString='00:00') {
-    this.date = new Date();
+    this.date = new Date(new Date().toLocaleString('en-US', { timeZone: 'America/Toronto' }));
+
+    if (!dayString) return this.date;
     
     if (dayString) {
       this.advanceToDate(dayString, timeString);
@@ -12,8 +14,8 @@ class Time {
   advanceToDate(dayString, timeString='00:00') {
     const [hour, minutes] = timeString.split(':').map((num) => parseInt(num));
 
-    const hourHasPassedToday = this.date.getHours() > hour;
-    const minutesHavePassedToday = this.date.getMinutes() > minutes;
+    const hourHasPassedToday = this.date.getHours() >= hour;
+    const minutesHavePassedToday = this.date.getMinutes() >= minutes;
     if (hourHasPassedToday && minutesHavePassedToday) {
       // Advance day
       this.date.setDate(this.date.getDate() + 1);
@@ -31,7 +33,7 @@ class Time {
   }
 
   static getTimeToDate([dayString, timeString='00:00']) {
-    const currentTime = new Date();
+    const currentTime = new Time();
     const targetTime = new Time(dayString, timeString);
     return targetTime - currentTime;
   }

@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "event": "pm2 stop queueEvent.js & pm2 start queueEvent.js --log log/eventLog.txt",
+    "hiatus": "pm2 stop listenForHiatus.js & pm2 start listenForHiatrus.js --log log/hiatusLog.txt"
   },
   "keywords": [],
   "author": "",

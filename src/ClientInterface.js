@@ -8,9 +8,12 @@ const Time = require('./Time');
 class ClientInterface {
   constructor(client) {
     this.client = client;
+    this.postEvent = this.postEvent.bind(this);
+    this.sendEventSoonNotification = this.sendEventSoonNotification.bind(this);
   } 
   
-  async postEvent () {
+  async postEvent() {
+    // TODO: make this erase the event if its time has passed, otherwise start listening for responses on the post
     if (process.env.EVENT_POST_ID) return;
     
     const eventEmbed = createEventEmbed();
